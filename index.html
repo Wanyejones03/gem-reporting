@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEM REPORTING</title>
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            user-select: none;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        .cad-panel {
+            background: linear-gradient(135deg, #222222 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.6);
+        }
+        .cad-inner-panel {
+            background: #181818;
+            border: 1px solid #2c2c2c;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .cad-button {
+            background: linear-gradient(to bottom, #5f6d3f 0%, #4a5631 100%);
+            border: 1px solid #6f7f48;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+        }
+        .cad-button:hover {
+            background: linear-gradient(to bottom, #6d7d49 0%, #56643a 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 6px rgba(0,0,0,0.5);
+        }
+        .cad-button:active {
+            background: linear-gradient(to bottom, #4a5631 0%, #3f4b29 100%);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+        }
+        .gem-badge-icon {
+            background: radial-gradient(circle at 35% 35%, #7aa2f7 0%, #3d59a1 50%, #1a202c 100%);
+            box-shadow: inset -2px -2px 6px rgba(0,0,0,0.8), 0 2px 6px rgba(61,89,161,0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-6">
+
+    <div id="app" class="w-full max-w-xl cad-panel rounded-lg overflow-hidden flex flex-col">
+        
+        <!-- Window Title Bar -->
+        <div class="bg-[#1a1a1a] px-4 py-2.5 flex items-center justify-between border-b border-[#2d2d2d]">
+            <div class="flex items-center space-x-2.5">
+                <span class="text-[#7aa2f7] text-sm"><i class="fa-solid fa-gem"></i></span>
+                <span class="font-semibold tracking-wider text-xs sm:text-sm text-gray-200">GEM REPORTING</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+                <button onclick="toggleDataEditor()" title="Import / Edit Data" class="w-6 h-6 rounded bg-[#282828] hover:bg-[#383838] border border-[#3a3a3a] text-gray-300 flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-code"></i>
+                </button>
+                <button title="Minimize" class="w-6 h-6 rounded bg-[#282828] hover:bg-[#383838] border border-[#3a3a3a] text-gray-400 flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                <button title="Maximize" class="w-6 h-6 rounded bg-[#282828] hover:bg-[#383838] border border-[#3a3a3a] text-gray-400 flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-square text-[10px]"></i>
+                </button>
+                <button onclick="resetToDefault()" title="Reset Data" class="w-6 h-6 rounded bg-[#282828] hover:bg-[#d32f2f] border border-[#3a3a3a] text-gray-400 hover:text-white flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content Area -->
+        <div class="p-4 sm:p-5 flex flex-col space-y-4">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Left Metadata Box -->
+                <div class="cad-inner-panel p-3 rounded flex flex-col justify-between space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-400">Project</span>
+                        <span id="projectNameDisplay" class="font-medium text-gray-100 truncate max-w-[160px] sm:max-w-[180px]" title="LPendantWithHeartBailFINISHED (Copy)">LPendantWithHeartBailFINISHED (Copy)</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-400">Date</span>
+                        <span id="projectDateDisplay" class="font-medium text-gray-100">2026-07-25</span>
+                    </div>
+                </div>
+
+                <!-- Right Status Box -->
+                <div class="cad-inner-panel p-3 rounded flex flex-col justify-between space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-gray-400">Warning</span>
+                        <span id="warningDisplay" class="font-medium text-amber-400 flex items-center space-x-1.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span id="warningTextDisplay">Overlapping gems</span>
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-1 border-t border-[#262626] text-xs">
+                        <div>
+                            <div class="text-gray-400 text-[10px]">Total Weight</div>
+                            <div id="totalWeightDisplay" class="font-bold text-gray-100 text-sm">1.260 ct</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400 text-[10px]">Total Qty</div>
+                            <div id="totalQtyDisplay" class="font-bold text-gray-100 text-sm">126</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Bar Separator matching reference -->
+            <div class="relative flex items-center justify-center py-1">
+                <div class="w-full h-1 bg-[#181818] border border-[#2a2a2a] rounded"></div>
+                <div class="absolute w-3.5 h-3.5 rounded-full bg-[#7a7a7a] border-2 border-[#2b2b2b] shadow cursor-pointer"></div>
+            </div>
+
+            <div class="cad-inner-panel rounded overflow-hidden">
+                <!-- Gem Header Bar inside table container -->
+                <div class="bg-[#1f1f1f] px-4 py-3 border-b border-[#2d2d2d] flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-7 h-7 rounded-full gem-badge-icon flex items-center justify-center text-white text-xs shadow-inner">
+                            <i class="fa-solid fa-gem text-[10px]"></i>
+                        </div>
+                        <span id="gemCutDisplay" class="font-semibold text-sm text-gray-100">Round</span>
+                    </div>
+                    <span id="gemTypeDisplay" class="font-semibold text-sm text-gray-100">Diamond</span>
+                </div>
+
+                <!-- Data Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-[#262626] text-gray-400 uppercase tracking-wider text-[11px]">
+                                <th class="py-2.5 px-4 font-medium">Size</th>
+                                <th class="py-2.5 px-3 font-medium text-center">Qty</th>
+                                <th class="py-2.5 px-4 font-medium text-right pr-6">Total Carat Weight</th>
+                                <th class="py-2.5 px-2 w-12"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="gemTableBody" class="divide-y divide-[#222222]">
+                            <!-- Rows populated dynamically via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-gray-500 px-1 pt-1">
+                <span>CAD Report Engine v3.4</span>
+                <button onclick="toggleDataEditor()" class="text-indigo-400 hover:underline flex items-center space-x-1">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Edit / Paste Data</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Data Editor Modal -->
+    <div id="dataEditorModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="cad-panel w-full max-w-lg rounded-lg overflow-hidden flex flex-col shadow-2xl border border-[#444]">
+            <div class="bg-[#1a1a1a] px-4 py-3 flex items-center justify-between border-b border-[#333]">
+                <h3 class="font-semibold text-sm text-gray-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-file-lines text-indigo-400"></i>
+                    <span>Gem Report Data Input (JSON / CSV / Text)</span>
+                </h3>
+                <button onclick="toggleDataEditor()" class="text-gray-400 hover:text-white px-2 py-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 flex flex-col space-y-3">
+                <p class="text-xs text-gray-400">
+                    Paste JSON, structured CSV, or text extracted from the report below. The UI will instantly parse and re-render.
+                </p>
+                <textarea id="jsonInputBox" rows="12" class="w-full bg-[#141414] border border-[#333] rounded p-3 text-xs text-gray-200 font-mono focus:outline-none focus:border-indigo-500" placeholder="Paste report data here..."></textarea>
+                
+                <div class="flex items-center justify-between pt-2">
+                    <div class="flex space-x-2">
+                        <button onclick="loadSampleData('heartBail')" class="px-3 py-1.5 rounded bg-[#282828] hover:bg-[#383838] border border-[#3a3a3a] text-xs text-gray-300 transition">Load L Pendant Report</button>
+                        <button onclick="loadSampleData('boston')" class="px-3 py-1.5 rounded bg-[#282828] hover:bg-[#383838] border border-[#3a3a3a] text-xs text-gray-300 transition">Load Boston Pendant</button>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="toggleDataEditor()" class="px-3 py-1.5 rounded bg-[#282828] hover:bg-[#383838] border border-[#3a3a3a] text-xs text-gray-300 transition">Cancel</button>
+                        <button onclick="applyDataInput()" class="cad-button px-4 py-1.5 rounded text-xs font-semibold text-white">Apply & Render</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // L Pendant With Heart Bail Report Data pre-loaded
+        const lPendantReportData = {
+            project: "LPendantWithHeartBailFINISHED (Copy)",
+            date: "2026-07-25",
+            warning: "Overlapping gems",
+            totalWeight: 1.26,
+            totalQty: 126,
+            gemCut: "Round",
+            gemType: "Diamond",
+            rows: [
+                { size: "1.40 X 1.40", qty: 126, tw: 1.260 }
+            ]
+        };
+
+        const sampleBostonData = {
+            project: "Boston Pendant(…",
+            date: "2026-09-10",
+            warning: "Overlapping gems",
+            totalWeight: 2.901,
+            totalQty: 329,
+            gemCut: "Round",
+            gemType: "Diamond",
+            rows: [
+                { size: "1.50 X 1.50", qty: 104, tw: 1.248 },
+                { size: "1.40 X 1.40", qty: 53, tw: 0.530 },
+                { size: "1.30 X 1.30", qty: 65, tw: 0.520 },
+                { size: "1.20 X 1.20", qty: 75, tw: 0.450 },
+                { size: "1.10 X 1.10", qty: 25, tw: 0.125 },
+                { size: "1.00 X 1.00", qty: 7, tw: 0.028 }
+            ]
+        };
+
+        let currentReportData = JSON.parse(JSON.stringify(lPendantReportData));
+
+        function renderApp() {
+            document.getElementById('projectNameDisplay').innerText = currentReportData.project;
+            document.getElementById('projectNameDisplay').title = currentReportData.project;
+            document.getElementById('projectDateDisplay').innerText = currentReportData.date;
+            
+            const warningEl = document.getElementById('warningDisplay');
+            const warningText = document.getElementById('warningTextDisplay');
+            if (currentReportData.warning && currentReportData.warning.toLowerCase() !== 'none') {
+                warningEl.parentElement.style.display = '';
+                warningText.innerText = currentReportData.warning;
+            } else {
+                warningEl.innerHTML = '<span class="text-emerald-400">Secure / Clean</span>';
+            }
+
+            document.getElementById('totalWeightDisplay').innerText = currentReportData.totalWeight.toFixed(3) + " ct";
+            document.getElementById('totalQtyDisplay').innerText = currentReportData.totalQty;
+            document.getElementById('gemCutDisplay').innerText = currentReportData.gemCut;
+            document.getElementById('gemTypeDisplay').innerText = currentReportData.gemType;
+
+            const tbody = document.getElementById('gemTableBody');
+            tbody.innerHTML = '';
+
+            currentReportData.rows.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-[#1f1f1f] transition group";
+                tr.innerHTML = `
+                    <td class="py-2.5 px-4 font-mono text-gray-200">${row.size}</td>
+                    <td class="py-2.5 px-3 text-center text-gray-300 font-medium">${row.qty}</td>
+                    <td class="py-2.5 px-4 text-right font-mono text-gray-200 pr-6">${row.tw.toFixed(3)}tw</td>
+                    <td class="py-2.5 px-2 text-center">
+                        <button onclick="inspectGemRow(${idx})" title="Inspect Row" class="cad-button w-6 h-6 rounded flex items-center justify-center text-white text-[10px] mx-auto shadow">
+                            <i class="fa-solid fa-play text-[9px]"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleDataEditor() {
+            const modal = document.getElementById('dataEditorModal');
+            const box = document.getElementById('jsonInputBox');
+            if (modal.classList.contains('hidden')) {
+                box.value = JSON.stringify(currentReportData, null, 2);
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function loadSampleData(type) {
+            if (type === 'boston') {
+                document.getElementById('jsonInputBox').value = JSON.stringify(sampleBostonData, null, 2);
+            } else {
+                document.getElementById('jsonInputBox').value = JSON.stringify(lPendantReportData, null, 2);
+            }
+        }
+
+        function applyDataInput() {
+            const boxVal = document.getElementById('jsonInputBox').value;
+            try {
+                const parsed = JSON.parse(boxVal);
+                if (parsed.rows && Array.isArray(parsed.rows)) {
+                    currentReportData = parsed;
+                    let calcQty = 0;
+                    let calcWt = 0;
+                    currentReportData.rows.forEach(r => {
+                        calcQty += Number(r.qty) || 0;
+                        calcWt += Number(r.tw) || 0;
+                    });
+                    if (!currentReportData.totalQty) currentReportData.totalQty = calcQty;
+                    if (!currentReportData.totalWeight) currentReportData.totalWeight = calcWt;
+
+                    renderApp();
+                    toggleDataEditor();
+                } else {
+                    showNotification("Invalid JSON format: 'rows' array is required.");
+                }
+            } catch(e) {
+                parseTextReport(boxVal);
+            }
+        }
+
+        function parseTextReport(text) {
+            const lines = text.split('\n').filter(l => l.trim().length > 0);
+            if (lines.length === 0) return;
+
+            let newRows = [];
+            let totalQ = 0;
+            let totalW = 0;
+
+            lines.forEach(line => {
+                const parts = line.split(/[\t,;|]+/).map(p => p.trim());
+                if (parts.length >= 3) {
+                    const sizeVal = parts[0];
+                    const sizeFormatted = sizeVal.includes('X') ? sizeVal : `${Number(sizeVal).toFixed(2)} X ${Number(sizeVal).toFixed(2)}`;
+                    const qty = parseInt(parts[1]) || 0;
+                    const tw = parseFloat(parts[2].replace('tw', '')) || 0;
+                    if (qty > 0 && tw > 0) {
+                        newRows.push({ size: sizeFormatted, qty, tw });
+                        totalQ += qty;
+                        totalW += tw;
+                    }
+                }
+            });
+
+            if (newRows.length > 0) {
+                currentReportData.rows = newRows;
+                currentReportData.totalQty = totalQ;
+                currentReportData.totalWeight = totalW;
+                renderApp();
+                toggleDataEditor();
+            } else {
+                showNotification("Could not parse input. Please provide valid JSON or CSV format.");
+            }
+        }
+
+        function inspectGemRow(idx) {
+            const row = currentReportData.rows[idx];
+            showNotification(`Inspection: ${currentReportData.gemCut} ${currentReportData.gemType} | Size: ${row.size} | Qty: ${row.qty} | Carat Weight: ${row.tw.toFixed(3)}tw`);
+        }
+
+        function showNotification(msg) {
+            const notif = document.createElement('div');
+            notif.className = "fixed bottom-5 right-5 bg-[#222] border border-[#444] text-gray-200 px-4 py-3 rounded shadow-2xl text-xs z-50 flex items-center space-x-3 animate-fade-in";
+            notif.innerHTML = `
+                <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
+                <div>
+                    <div class="font-bold">Gem Reporter Alert</div>
+                    <div class="text-gray-400">${msg}</div>
+                </div>
+            `;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3500);
+        }
+
+        function resetToDefault() {
+            currentReportData = JSON.parse(JSON.stringify(lPendantReportData));
+            renderApp();
+        }
+
+        window.onload = function() {
+            renderApp();
+        };
+    </script>
+</body>
+</html>
